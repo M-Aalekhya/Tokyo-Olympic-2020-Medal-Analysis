@@ -1,0 +1,306 @@
+---
+title: "Tokyo Olympic 2020 Visualisation Project"
+author: "Aalekhya Mukhopadhyay"
+date: "2023-09-30"
+output: pdf_document
+---
+
+
+```{r, echo=FALSE}
+data = read.csv('tokyo_2021.csv')
+
+```
+
+```{r, echo=FALSE, include=FALSE}
+library(ggplot2)
+
+# ggplot(data)
+```
+
+# \textcolor{blue}{INTRODUCTION}
+
+The 2020 Summer Olympics, officially known as the XXXII Olympiad Games, most commonly Tokyo 2020, was a multi-sport event held during the summer of 2021 due to the COVID-19 pandemic in the Tokyo metropolitan region, Japan.
+
+The Tokyo 2020 Olympics will be remembered as an event that defied adversity and showcased the indomitable spirit of the global sporting community. Originally scheduled for 2020, the world watched with bated breath as the games were postponed for the first time in modern Olympic history, confronting the challenges of the COVID-19 pandemic.
+
+This unparalleled delay didn't deter the organizers, athletes, and spectators from holding onto their dreams and hopes. In the summer of 2021, the games finally unfolded in a meticulously planned and pandemic-adapted environment. The Tokyo Olympics became a symbol of resilience, unity, and the unyielding pursuit of excellence.
+
+Athletes from across the world, having endured postponements and uncertainty, brought their A-game to the stage, breaking records and inspiring billions. The Games celebrated not only athletic prowess but also the human spirit's ability to overcome obstacles. Spectators, though limited in numbers, cheered with unwavering enthusiasm, a testament to the enduring power of sport to unite and uplift.
+
+This is going to be an exploratory data analysis of the medals chart of Tokyo Olympic 2020.
+
+
+# \textcolor{blue}{DATA DESCRIPTION}
+
+The dataset is taken from [\textcolor{blue}{Kaggle}](https://www.kaggle.com/datasets/jeronimojr/tokyo-2021-medal-table) and the data is collected from [\textcolor{blue}{2020 Summer Olympics medal table}](https://pt.wikipedia.org/wiki/Quadro_de_medalhas_dos_Jogos_Ol%C3%ADmpicos_de_Ver%C3%A3o_de_2020). 
+
+The dataset contains 6 columns:
+
+\textbf{1. X :} This column counts the number of participating countries.
+
+\textbf{2. Country :}  This column lists the names of all the participating countries in Tokyo Olympic 2020. The names of the countries are in Portuguese.
+
+\textbf{3. Gold :} This column lists the number of gold medals won by each country with respect to the column of country names.
+
+\textbf{4. Silver :} This column lists the number of silver medals won by each country with respect to the column of country names.
+
+\textbf{5. Bronze :} This column lists the number of bronze medals won by each country with respect to the column of country names.
+
+\textbf{6. Total :} This column lists the total number of medals won by each country with respect to the column of country names.
+
+
+The first five rows of the dataset are represented below in a table.
+
+
+```{r, echo=FALSE}
+knitr::kable(data[1:5,])
+
+```
+
+We can observe from the data that the participating countries are listed with respect to the descending order of gold medals won by respective countries. 
+
+
+# \textcolor{blue}{EXPLORATORY DATA ANALYSIS}
+
+The data is sorted in descending order and the first five rows of the new sorted datas are represented below in a table.
+
+```{r, echo=FALSE}
+sd <- data
+#sd$Country = factor(sd$Country, levels = data$Country[order(data$Total,decreasing= TRUE)])
+knitr::kable(sd[order(data$Total, decreasing=TRUE),][1:5,], row.names = FALSE)
+```
+
+The following three bar graphs are plotted in descending order with respect to country and the three different types of medals won by respective countries in all categories.
+
+```{r, echo = FALSE, out.width='50%'}
+sd$Country = factor(sd$Country, levels = data$Country[order(data$Gold,decreasing= TRUE)])
+ggplot(sd, aes(x = Country)) +
+  geom_bar(aes(y = Gold, fill = "steelblue"), stat = "identity", position = "dodge", color="navy") +
+  labs(y = "Number of medals", title = "Gold Medals") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size =5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_identity()
+
+sd$Country = factor(sd$Country, levels = data$Country[order(data$Silver,decreasing= TRUE)])
+ggplot(sd, aes(x = Country)) +
+  geom_bar(aes(y = Silver, fill = "steelblue"), stat = "identity", position = "dodge", color="navy") +
+  labs(y = "Number of medals", title = "Silver Medals") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size =5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_identity()
+
+
+```
+
+```{r, echo = FALSE, out.width='60%', fig.align="center"}
+sd$Country = factor(sd$Country, levels = data$Country[order(data$Bronze,decreasing= TRUE)])
+ggplot(sd, aes(x = Country)) +
+  geom_bar(aes(y = Bronze, fill = "steelblue"), stat = "identity", position = "dodge", color="navy") +
+  labs(y = "Number of medals", title = "Bronze Medals") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size =5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_identity()
+
+```
+
+
+From the above graphs we get the result that *Estados Unidos* is the country with most number of medals in all categories of medals.
+*China* is the second country in lead with respect to number of gold and silver medals. *ROC* is the second country in lead with respect to number of bronze medals.
+*Japan*, *ROC* and *Great Britain* are the three countries in lead with respect to number of gold, silver and bronze medals respectively.
+
+
+
+The following bar graph is plotted in descending order with respect to country and the total number of medals won by respective countries in all categories.
+
+```{r, echo = FALSE, fig.height=4.2, fig.width=6, fig.align="center"}
+sd$Country = factor(sd$Country, levels = data$Country[order(data$Total,decreasing= TRUE)])
+ggplot(sd, aes(x = Country)) +
+  geom_bar(aes(y = Total, fill = "steelblue"), stat = "identity", position = "dodge", color="navy") +
+  labs(y = "Number of medals", title = "Total number of medals") +
+  # scale_fill_manual(values = c("Total" = "blue", "Variable 2" = "red")) +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size =5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_identity()
+
+```
+
+From the plot above we can see that *Estados Unidos* came first with respect to total number of medals.
+*China* came second, and *ROC* came third.
+
+
+
+
+Next is a pie chart showing how much percentage of gold, silver and bronze medals were won overall in the Tokyo Olympic 2020.
+
+```{r, echo=FALSE, fig.height=3, fig.width=5, fig.align="center"}
+Pie = data.frame(Medals = c('Gold', 'Silver','Bronze'),
+                    Percent = c((sum(data$Gold)/sum(data$Total))*100, (sum(data$Silver)/sum(data$Total))*100, (sum(data$Bronze)/sum(data$Total))*100))
+order = c("Gold","Silver","Bronze")
+Pie$Medals = factor(Pie$Medals, levels = order)
+ggplot(Pie, aes(x = "", y = Percent, fill = Medals)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(fill = "Medals") +
+  scale_fill_manual(values = c("Gold" = "gold", "Silver" = "#C0C0C0", "Bronze" = "#cd7f32"))+
+  theme_void()+
+  geom_text(aes(label = paste0(round(Percent),"%")), position = position_stack(vjust = 0.5))
+
+```
+
+
+
+The following three stacked bar graphs are plotted to compare the number of gold, silver, and bronze medals for each country respectively, with respect to the total number of medals, plotted against country names. The country names are sorted alphabetically.
+
+
+```{r, echo = FALSE, out.width='50%'}
+
+ggplot(data, aes(x = Country)) +
+  geom_bar(aes(y = Total, fill = "Total", color="black"), stat = "identity", position = "dodge") +
+  geom_bar(aes(y = Gold, fill = "Gold", color="black"), stat = "identity", position = "dodge") +
+  labs(y = "Number of medals", fill = "Type of medal", title = "Gold-Total") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size = 5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_manual(values = c("Gold" = "gold", "Total" = "steelblue1"))+
+  scale_color_identity()
+
+ggplot(data, aes(x = Country)) +
+  geom_bar(aes(y = Total, fill = "Total", color="black"), stat = "identity", position = "dodge") +
+  geom_bar(aes(y = Silver, fill = "Silver", color="black"), stat = "identity", position = "dodge") +
+  labs(y = "Number of medals", fill = "Type of medal", title = "Silver-Total") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size = 5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_manual(values = c("Silver" = "#C0C0C0", "Total" = "steelblue1"))+
+  scale_color_identity()
+
+```
+
+```{r, echo = FALSE, out.width='50%', fig.align="center"}
+ggplot(data, aes(x = Country)) +
+  geom_bar(aes(y = Total, fill = "Total", color="black"), stat = "identity", position = "dodge") +
+  geom_bar(aes(y = Bronze, fill = "Bronze", color="black"), stat = "identity", position = "dodge") +
+  labs(y = "Number of medals", fill = "Type of medal", title = "Bronze-Total") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size = 5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_manual(values = c("Bronze" = "#cd7f32", "Total" = "steelblue1"))+
+  scale_color_identity()
+```
+
+
+
+
+The following stacked bar-graph is plotted to compare the number of gold, silver, and bronze medals for each country, plotted against country names. The country names are sorted alphabetically.
+
+```{r, echo = FALSE, fig.height=5, fig.width=7, fig.align="center"}
+data$S = data$Gold+data$Silver
+ggplot(data, aes(x = Country)) +
+  geom_bar(aes(y = Total, fill = "Bronze", color="black"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = S, fill = "Silver", color="black"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Gold, fill = "Gold", color="black"), stat = "identity", position = "stack") +
+  labs(y = "Number of medals", fill = "Type of medal", title = "Gold-Silver-Bronze") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size = 5))+
+  theme(plot.title = element_text(hjust=0.5, vjust=-1))+
+  scale_fill_manual(values = c("Gold" = "gold", "Silver" = "#C0C0C0", "Bronze" = "#cd7f32"))+
+  scale_color_identity()
+```
+
+The first three countries in the lead with respect to total number of medals are taken. For each country, bar graphs showing the detailed number of gold, silver, bronze and total number of medals are plotted respectively.
+
+```{r, echo=FALSE, out.width='33%'}
+df <- data.frame(
+  Group = c("Gold", "Silver", "Bronze", "Total"),
+  Value = c(39, 41, 33, 113),
+  Color = c("gold", "#C0C0C0", "#cd7f32", "steelblue1")
+)
+custom_order <- c("Gold", "Silver", "Bronze", "Total")
+df$Group <- factor(df$Group, levels = custom_order)
+
+ggplot(df, aes(x = Group, y = Value, fill = Color, color = "black")) +
+  geom_bar(stat = "identity") +
+  scale_fill_identity() +
+  labs(x = "Estados Unidos", y = "No. of medals") +
+  geom_text(aes(label=Value), vjust=-0.15) +
+  scale_color_identity() +
+  theme_minimal()
+
+df <- data.frame(
+  Group = c("Gold", "Silver", "Bronze", "Total"),
+  Value = c(38, 32, 18, 88),
+  Color = c("gold", "#C0C0C0", "#cd7f32", "steelblue1")
+)
+custom_order <- c("Gold", "Silver", "Bronze", "Total")
+df$Group <- factor(df$Group, levels = custom_order)
+
+ggplot(df, aes(x = Group, y = Value, fill = Color, color = "black")) +
+  geom_bar(stat = "identity") +
+  scale_fill_identity() +
+  labs(x = "China", y = "No. of medals") +
+  geom_text(aes(label=Value), vjust=-0.15) +
+  scale_color_identity() +
+  theme_minimal()
+
+
+df <- data.frame(
+  Group = c("Gold", "Silver", "Bronze", "Total"),
+  Value = c(20, 28, 23, 71),
+  Color = c("gold", "#C0C0C0", "#cd7f32", "steelblue1")
+)
+custom_order <- c("Gold", "Silver", "Bronze", "Total")
+df$Group <- factor(df$Group, levels = custom_order)
+
+ggplot(df, aes(x = Group, y = Value, fill = Color, color = "black")) +
+  geom_bar(stat = "identity") +
+  scale_fill_identity() +
+  labs(x = "ROC", y = "No. of medals") +
+  geom_text(aes(label=Value), vjust=-0.15) +
+  scale_color_identity() +
+  theme_minimal()
+
+
+```
+
+We can observe the following from the plots above:
+
+1. Estados Unidos won 39 gold medals, 41 silver medals and 33 bronze medals summing up to a total of 113 medals.
+
+2. China won 38 gold medals, 32 silver medals and 18 bronze medals summing up to a total of 88 medals.
+
+3. ROC won 20 gold medals, 28 silver medals and 23 bronze medals summing up to a total of 71 medals.
+
+
+
+# \textcolor{blue}{RESULT}
+
+Performing exploratory data analysis on the data and studying the graphs, we get the following observations:
+
+- Ranking of countries with respect to total number of medals in the event:
+  1. Estados Unidos
+  2. China
+  3. ROC
+- Ranking of countries with respect to the number of gold medals:
+  1. Estador Unidos
+  2. China
+  3. Japan
+- Ranking of countries with respect to the number of silver medals:
+  1. Estados Unidos
+  2. China
+  3. ROC
+- Ranking of countries with respect to the number of bronze medals:
+  1. Estados Unidos
+  2. ROC
+  3. Great Britain
+- From the total number of medals won in the event, 31% is gold medals, 31% is silver medals and 37 percent is bronze medals 
+
+
+# \textcolor{blue}{CONCLUSION}
+
+In conducting an exploratory data analysis (EDA) of the Tokyo 2020 Olympic Games dataset, several key insights and observations have emerged. This analysis aimed to gain a better understanding of the diverse aspects of medal distribution. The medal distribution analysis showcased which countries achieved the most medals overall and in specific categories (gold, silver, bronze). Congratulations to Estados Unidos for being on the lead of this medal race throughout the event. It was evident that the competition was fierce, and the outcome of events was often determined by fractions of a second or small margins.
+
+The COVID-19 pandemic had a notable impact on the Tokyo 2020 Olympics, leading to changes in scheduling, spectator policies, and athlete preparation. Despite these challenges, the Games continued and demonstrated the resilience of the global sporting community.
+
+The Tokyo 2020 Olympics will leave a lasting legacy in terms of infrastructure, global unity, and the spirit of sportsmanship.The lessons learned from these Games will shape the organization and management of future international sporting events.
+
+In conclusion, the EDA of the Tokyo 2020 Olympic Games dataset has provided valuable insights into the diverse and complex nature of the event.
+
+
+
+
